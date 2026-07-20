@@ -1,411 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PG Study Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PG Study Tracker</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f7;
-      color: #1d1d1f;
-    }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
 
-    .container {
-      max-width: 700px;
-      margin: auto;
-      padding: 30px 20px 80px;
-    }
+.container {
+  max-width: 750px;
+  margin: auto;
+  padding: 30px 20px 80px;
+}
 
-    h1 {
-      margin-bottom: 5px;
-    }
+h1 { margin-bottom: 5px; }
 
-    .subtitle {
-      color: #777;
-      margin-top: 0;
-      margin-bottom: 30px;
-    }
+.subtitle {
+  color: #777;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
 
-    /* OVERALL PROGRESS */
+/* OVERALL */
 
-    .overall-progress {
-      background: white;
-      border-radius: 16px;
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+.overall {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
 
-    .overall-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
+.overall-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .overall-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
+.overall-title {
+  font-size: 20px;
+  font-weight: 600;
+}
 
-    .overall-percentage {
-      font-size: 22px;
-      font-weight: 700;
-    }
+.overall-percent {
+  font-size: 24px;
+  font-weight: 700;
+}
 
-    .overall-progress-container {
-      width: 100%;
-      height: 16px;
-      background: #e5e5ea;
-      border-radius: 20px;
-      overflow: hidden;
-    }
+.progress-track {
+  height: 14px;
+  background: #e5e5ea;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 14px;
+}
 
-    .overall-progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #34c759;
-      transition: width 0.3s ease;
-    }
+.progress-fill {
+  height: 100%;
+  background: #34c759;
+  transition: width .3s;
+}
 
-    .overall-stats {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #777;
-    }
+.stats {
+  color: #777;
+  font-size: 14px;
+  margin-top: 9px;
+}
 
-    /* CONTROLS */
+/* SEARCH */
 
-    .controls {
-      margin-bottom: 20px;
-    }
+.search {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  background: white;
+}
 
-    .toggle-progress {
-      background: #e5e5ea;
-      color: #1d1d1f;
-      padding: 9px 14px;
-    }
+/* GENERAL BUTTONS */
 
-    /* SUBJECT */
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 11px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    .subject {
-      background: white;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+.primary {
+  background: #007aff;
+  color: white;
+}
 
-    .subject-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.secondary {
+  background: #ededf0;
+  color: #1d1d1f;
+}
 
-    .subject-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
+.small {
+  padding: 5px 8px;
+  font-size: 12px;
+}
 
-    .percentage {
-      font-weight: 600;
-    }
+.danger {
+  background: none;
+  color: #aaa;
+  padding: 5px;
+}
 
-    .subject-progress-section {
-      display: none;
-    }
+.danger:hover { color: red; }
 
-    .subject-progress-section.visible {
-      display: block;
-    }
+/* CATEGORY */
 
-    .progress-container {
-      width: 100%;
-      height: 10px;
-      background: #e5e5ea;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 12px 0 18px;
-    }
+.category {
+  margin-top: 25px;
+}
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #34c759;
-      transition: width 0.3s ease;
-    }
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 
-    /* TOPICS */
+.category-name {
+  font-size: 19px;
+  font-weight: 700;
+  flex: 1;
+  cursor: pointer;
+}
 
-    .topic {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 0;
-    }
+.category-arrow {
+  cursor: pointer;
+  font-size: 18px;
+  width: 20px;
+}
 
-    .topic input {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
+.category-content.hidden {
+  display: none;
+}
 
-    .topic.completed span {
-      text-decoration: line-through;
-      color: #999;
-    }
+/* SUBJECT */
 
-    .topic span {
-      flex: 1;
-    }
+.subject {
+  background: white;
+  border-radius: 13px;
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+}
 
-    /* BUTTONS */
+.subject-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 14px;
-    }
+.subject-arrow {
+  cursor: pointer;
+  font-size: 17px;
+  width: 20px;
+}
 
-    .add-topics {
-      background: #eee;
-      margin-top: 12px;
-    }
+.subject-name {
+  font-weight: 600;
+  font-size: 17px;
+  flex: 1;
+  cursor: pointer;
+}
 
-    .delete {
-      background: none;
-      color: #aaa;
-      font-size: 16px;
-      padding: 4px 8px;
-    }
+.subject-count {
+  color: #888;
+  font-size: 13px;
+}
 
-    .delete:hover {
-      color: red;
-    }
+.subject-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
 
-    .add-subject {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background: #007aff;
-      color: white;
-      margin-top: 10px;
-    }
+.subject-details {
+  margin-top: 14px;
+}
 
-    .empty {
-      color: #999;
-      font-size: 14px;
-      margin-top: 12px;
-    }
+.subject-details.hidden {
+  display: none;
+}
 
-    /* MODAL */
+/* SUBJECT PROGRESS */
 
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.4);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+.subject-progress {
+  margin-bottom: 15px;
+  display: none;
+}
 
-    .modal.visible {
-      display: flex;
-    }
+.subject-progress.visible {
+  display: block;
+}
 
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      padding: 22px;
-      width: 100%;
-      max-width: 500px;
-    }
+.subject-progress .progress-track {
+  height: 9px;
+  margin-top: 8px;
+}
 
-    .modal-content h2 {
-      margin-top: 0;
-    }
+.subject-progress-text {
+  font-size: 13px;
+  color: #777;
+  margin-top: 6px;
+}
 
-    .modal-description {
-      color: #777;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
+/* TOPICS */
 
-    textarea {
-      width: 100%;
-      min-height: 220px;
-      resize: vertical;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 12px;
-      font-family: inherit;
-      font-size: 16px;
-    }
+.topic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 2px;
+}
 
-    .modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 15px;
-    }
+.topic input {
+  width: 19px;
+  height: 19px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 
-    .cancel-button {
-      background: #eee;
-    }
+.topic span {
+  flex: 1;
+}
 
-    .confirm-button {
-      background: #007aff;
-      color: white;
-    }
+.topic.completed span {
+  text-decoration: line-through;
+  color: #999;
+}
 
-  </style>
+/* TOP BUTTONS */
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.top-actions button {
+  flex: 1;
+  padding: 12px;
+}
+
+/* SELECT */
+
+select {
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  padding: 5px;
+  background: white;
+  font-size: 12px;
+}
+
+/* MODAL */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.visible {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.empty {
+  color: #999;
+  font-size: 14px;
+  padding: 10px 0;
+}
+
+@media(max-width:600px) {
+  .subject-main {
+    align-items: flex-start;
+  }
+
+  .subject-actions {
+    max-width: 150px;
+    justify-content: flex-end;
+  }
+
+  .top-actions {
+    flex-direction: column;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <h1>PG Study Tracker</h1>
-  <p class="subtitle">One topic at a time.</p>
+<h1>PG Study Tracker</h1>
+<p class="subtitle">One topic at a time.</p>
 
-  <!-- OVERALL PROGRESS -->
-
-  <div class="overall-progress">
-
-    <div class="overall-header">
-
-      <div class="overall-title">
-        Overall Syllabus Progress
-      </div>
-
-      <div
-        class="overall-percentage"
-        id="overallPercentage">
-        0%
-      </div>
-
-    </div>
-
-    <div class="overall-progress-container">
-
-      <div
-        class="overall-progress-bar"
-        id="overallProgressBar">
-      </div>
-
-    </div>
-
-    <div
-      class="overall-stats"
-      id="overallStats">
-      0 of 0 topics completed
-    </div>
-
+<div class="overall">
+  <div class="overall-header">
+    <div class="overall-title">Overall Syllabus Progress</div>
+    <div class="overall-percent" id="overallPercent">0%</div>
   </div>
 
-  <!-- CONTROLS -->
-
-  <div class="controls">
-
-    <button
-      class="toggle-progress"
-      id="toggleProgressButton"
-      onclick="toggleSubjectProgress()">
-      Show Subject Progress
-    </button>
-
+  <div class="progress-track">
+    <div class="progress-fill" id="overallFill" style="width:0%"></div>
   </div>
 
-  <!-- SUBJECTS -->
+  <div class="stats" id="overallStats">
+    0 of 0 topics completed
+  </div>
+</div>
 
-  <div id="subjects"></div>
+<input
+  id="search"
+  class="search"
+  type="text"
+  placeholder="🔎 Search subjects or topics..."
+  oninput="render()"
+>
 
-  <button
-    class="add-subject"
-    onclick="addSubject()">
-    + Add Subject
-  </button>
+<div class="top-actions">
+  <button class="primary" onclick="addSubject()">+ Add Subject</button>
+  <button class="secondary" onclick="addCategory()">+ Add Category</button>
+</div>
+
+<div id="app"></div>
 
 </div>
 
 
-<!-- ADD TOPICS MODAL -->
+<!-- TOPICS MODAL -->
 
-<div
-  class="modal"
-  id="topicModal">
-
+<div class="modal" id="topicModal">
   <div class="modal-content">
 
     <h2>Add Topics</h2>
 
-    <div class="modal-description">
-      Paste your topics below. Put each topic on a new line.
-    </div>
+    <p style="color:#777;font-size:14px;">
+      Paste multiple topics. Put each topic on a new line.
+    </p>
 
-    <textarea
-      id="topicInput"
+    <textarea id="topicInput"
       placeholder="Demography
 Epidemiology
 Screening
-Biostatistics
-Nutrition"></textarea>
+Biostatistics"></textarea>
 
     <div class="modal-buttons">
-
-      <button
-        class="cancel-button"
-        onclick="closeTopicModal()">
-        Cancel
-      </button>
-
-      <button
-        class="confirm-button"
-        onclick="confirmAddTopics()">
-        Add Topics
-      </button>
-
+      <button class="secondary" onclick="closeTopicModal()">Cancel</button>
+      <button class="primary" onclick="confirmTopics()">Add Topics</button>
     </div>
 
   </div>
-
 </div>
 
 
 <script>
 
-let data =
-  JSON.parse(
-    localStorage.getItem("pgStudyTracker")
-  ) || [];
+/*
+Existing data structure is preserved.
+New optional fields:
+subject.category
+subject.expanded
+subject.showProgress
 
-let showSubjectProgress = false;
+Categories are stored separately.
+*/
+
+let data =
+  JSON.parse(localStorage.getItem("pgStudyTracker")) || [];
+
+let categories =
+  JSON.parse(localStorage.getItem("pgStudyCategories")) || [];
+
+let categoryStates =
+  JSON.parse(localStorage.getItem("pgStudyCategoryStates")) || {};
 
 let currentSubjectIndex = null;
 
 
-/* SAVE */
+/* MIGRATE EXISTING DATA */
 
-function saveData() {
+data.forEach(subject => {
+
+  if (subject.category === undefined)
+    subject.category = "Uncategorized";
+
+  if (subject.expanded === undefined)
+    subject.expanded = false;
+
+  if (subject.showProgress === undefined)
+    subject.showProgress = false;
+
+});
+
+
+function save() {
 
   localStorage.setItem(
     "pgStudyTracker",
     JSON.stringify(data)
   );
+
+  localStorage.setItem(
+    "pgStudyCategories",
+    JSON.stringify(categories)
+  );
+
+  localStorage.setItem(
+    "pgStudyCategoryStates",
+    JSON.stringify(categoryStates)
+  );
+
+}
+
+
+/* OVERALL */
+
+function updateOverall() {
+
+  let total = 0;
+  let completed = 0;
+
+  data.forEach(subject => {
+
+    total += subject.topics.length;
+
+    completed += subject.topics.filter(
+      topic => topic.completed
+    ).length;
+
+  });
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round((completed / total) * 100);
+
+  document.getElementById("overallPercent")
+    .textContent = percent + "%";
+
+  document.getElementById("overallFill")
+    .style.width = percent + "%";
+
+  document.getElementById("overallStats")
+    .textContent =
+      completed + " of " + total + " topics completed";
 
 }
 
@@ -414,173 +503,432 @@ function saveData() {
 
 function render() {
 
-  updateOverallProgress();
+  updateOverall();
 
-  const container =
-    document.getElementById("subjects");
+  const app =
+    document.getElementById("app");
 
-  container.innerHTML = "";
+  app.innerHTML = "";
 
-  data.forEach(
-    (subject, subjectIndex) => {
+  const query =
+    document.getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
 
-      const completed =
-        subject.topics.filter(
-          topic => topic.completed
-        ).length;
 
-      const total =
-        subject.topics.length;
+  /*
+  Get all categories currently needed.
+  Uncategorized always exists if required.
+  */
 
-      const percentage =
-        total === 0
-          ? 0
-          : Math.round(
-              (completed / total) * 100
+  let allCategories = [...categories];
+
+  if (
+    data.some(
+      subject =>
+        !subject.category ||
+        subject.category === "Uncategorized"
+    )
+  ) {
+    if (!allCategories.includes("Uncategorized"))
+      allCategories.unshift("Uncategorized");
+  }
+
+
+  allCategories.forEach(category => {
+
+    let subjects =
+      data
+        .map((subject, index) => ({
+          subject,
+          originalIndex: index
+        }))
+        .filter(item =>
+          (item.subject.category || "Uncategorized")
+          === category
+        );
+
+
+    /*
+    SEARCH FILTER
+    */
+
+    if (query) {
+
+      subjects =
+        subjects.filter(item => {
+
+          const subjectMatch =
+            item.subject.name
+              .toLowerCase()
+              .includes(query);
+
+          const topicMatch =
+            item.subject.topics.some(
+              topic =>
+                topic.name
+                  .toLowerCase()
+                  .includes(query)
             );
 
-      const subjectDiv =
-        document.createElement("div");
+          return subjectMatch || topicMatch;
 
-      subjectDiv.className =
-        "subject";
+        });
 
-      subjectDiv.innerHTML = `
-
-        <div class="subject-header">
-
-          <div class="subject-title">
-            ${escapeHTML(subject.name)}
-          </div>
-
-          <button
-            class="delete"
-            onclick="deleteSubject(${subjectIndex})">
-            ✕
-          </button>
-
-        </div>
+    }
 
 
-        <div
-          class="
-            subject-progress-section
-            ${showSubjectProgress
-              ? "visible"
-              : ""}
-          ">
+    if (query && subjects.length === 0)
+      return;
 
-          <div class="progress-container">
 
-            <div
-              class="progress-bar"
-              style="width:${percentage}%">
-            </div>
+    const categoryDiv =
+      document.createElement("div");
 
-          </div>
+    categoryDiv.className = "category";
 
-          <div class="percentage">
-            ${percentage}% ·
-            ${completed} of ${total} completed
-          </div>
 
-        </div>
+    const collapsed =
+      categoryStates[category] === true;
 
+
+    categoryDiv.innerHTML = `
+
+      <div class="category-header">
 
         <div
-          id="topics-${subjectIndex}">
+          class="category-arrow"
+          onclick="toggleCategory('${escapeJS(category)}')">
+          ${collapsed ? "▶" : "▼"}
         </div>
 
+        <div
+          class="category-name"
+          onclick="toggleCategory('${escapeJS(category)}')">
+          ${escapeHTML(category)}
+        </div>
+
+        ${
+          category !== "Uncategorized"
+          ? `
+            <button
+              class="danger"
+              title="Delete category"
+              onclick="deleteCategory('${escapeJS(category)}')">
+              ✕
+            </button>
+          `
+          : ""
+        }
+
+      </div>
+
+      <div
+        class="category-content
+        ${collapsed && !query ? "hidden" : ""}"
+        id="category-${safeId(category)}">
+      </div>
+
+    `;
+
+
+    app.appendChild(categoryDiv);
+
+
+    const categoryContent =
+      categoryDiv.querySelector(".category-content");
+
+
+    if (subjects.length === 0) {
+
+      categoryContent.innerHTML =
+        `<div class="empty">No subjects</div>`;
+
+    }
+
+
+    subjects.forEach(item => {
+
+      renderSubject(
+        categoryContent,
+        item.subject,
+        item.originalIndex,
+        query
+      );
+
+    });
+
+  });
+
+
+  save();
+
+}
+
+
+/* RENDER SUBJECT */
+
+function renderSubject(
+  container,
+  subject,
+  subjectIndex,
+  query
+) {
+
+  const completed =
+    subject.topics.filter(
+      topic => topic.completed
+    ).length;
+
+  const total =
+    subject.topics.length;
+
+  const percent =
+    total === 0
+      ? 0
+      : Math.round(
+          completed / total * 100
+        );
+
+
+  /*
+  If searching for a topic,
+  automatically show subject contents.
+  */
+
+  const searchTopicMatch =
+    query &&
+    subject.topics.some(
+      topic =>
+        topic.name
+          .toLowerCase()
+          .includes(query)
+    );
+
+  const expanded =
+    subject.expanded ||
+    searchTopicMatch;
+
+
+  const div =
+    document.createElement("div");
+
+  div.className = "subject";
+
+
+  let categoryOptions =
+    [`<option value="Uncategorized">
+      Uncategorized
+    </option>`];
+
+  categories.forEach(category => {
+
+    categoryOptions.push(
+      `<option
+        value="${escapeHTML(category)}"
+        ${
+          subject.category === category
+            ? "selected"
+            : ""
+        }>
+        ${escapeHTML(category)}
+      </option>`
+    );
+
+  });
+
+
+  div.innerHTML = `
+
+    <div class="subject-main">
+
+      <div
+        class="subject-arrow"
+        onclick="toggleSubject(${subjectIndex})">
+        ${expanded ? "▼" : "▶"}
+      </div>
+
+
+      <div
+        class="subject-name"
+        onclick="toggleSubject(${subjectIndex})">
+
+        ${escapeHTML(subject.name)}
+
+        <span class="subject-count">
+          ${completed}/${total}
+        </span>
+
+      </div>
+
+
+      <div class="subject-actions">
 
         <button
-          class="add-topics"
+          class="secondary small"
+          title="Move up"
+          onclick="moveSubject(${subjectIndex}, -1)">
+          ↑
+        </button>
+
+        <button
+          class="secondary small"
+          title="Move down"
+          onclick="moveSubject(${subjectIndex}, 1)">
+          ↓
+        </button>
+
+        <button
+          class="secondary small"
+          onclick="toggleSubjectProgress(${subjectIndex})">
+          ${
+            subject.showProgress
+              ? "Hide Progress"
+              : "Progress"
+          }
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="subject-progress
+      ${subject.showProgress ? "visible" : ""}">
+
+      <div class="progress-track">
+        <div
+          class="progress-fill"
+          style="width:${percent}%">
+        </div>
+      </div>
+
+      <div class="subject-progress-text">
+        ${percent}% ·
+        ${completed} of ${total} topics completed
+      </div>
+
+    </div>
+
+
+    <div
+      class="subject-details
+      ${expanded ? "" : "hidden"}">
+
+      <div style="
+        display:flex;
+        gap:8px;
+        align-items:center;
+        margin-bottom:12px;
+        flex-wrap:wrap;
+      ">
+
+        <button
+          class="secondary small"
           onclick="openTopicModal(${subjectIndex})">
           + Add Topics
         </button>
 
-      `;
+        <select
+          onchange="changeCategory(
+            ${subjectIndex},
+            this.value
+          )">
 
-      container.appendChild(
-        subjectDiv
-      );
+          ${categoryOptions.join("")}
+
+        </select>
+
+        <button
+          class="danger"
+          onclick="deleteSubject(${subjectIndex})">
+          Delete Subject
+        </button>
+
+      </div>
+
+      <div class="topics"></div>
+
+    </div>
+
+  `;
 
 
-      const topicContainer =
-        document.getElementById(
-          `topics-${subjectIndex}`
-        );
+  container.appendChild(div);
 
+
+  const topicContainer =
+    div.querySelector(".topics");
+
+
+  subject.topics.forEach(
+    (topic, topicIndex) => {
+
+      /*
+      When searching, only show matching topics
+      unless subject name itself matches.
+      */
+
+      const subjectMatches =
+        query &&
+        subject.name
+          .toLowerCase()
+          .includes(query);
 
       if (
-        subject.topics.length === 0
-      ) {
-
-        topicContainer.innerHTML =
-          `<div class="empty">
-            No topics yet
-          </div>`;
-
-      }
+        query &&
+        !subjectMatches &&
+        !topic.name
+          .toLowerCase()
+          .includes(query)
+      ) return;
 
 
-      subject.topics.forEach(
-        (topic, topicIndex) => {
+      const topicDiv =
+        document.createElement("div");
 
-          const topicDiv =
-            document.createElement(
-              "div"
-            );
+      topicDiv.className =
+        "topic" +
+        (topic.completed
+          ? " completed"
+          : "");
 
-          topicDiv.className =
-            "topic" +
-            (
-              topic.completed
-                ? " completed"
-                : ""
-            );
 
-          topicDiv.innerHTML = `
+      topicDiv.innerHTML = `
 
-            <input
-              type="checkbox"
+        <input
+          type="checkbox"
+          ${topic.completed ? "checked" : ""}
+          onchange="
+            toggleTopic(
+              ${subjectIndex},
+              ${topicIndex}
+            )
+          "
+        >
 
-              ${
-                topic.completed
-                  ? "checked"
-                  : ""
-              }
+        <span>
+          ${escapeHTML(topic.name)}
+        </span>
 
-              onchange="
-                toggleTopic(
-                  ${subjectIndex},
-                  ${topicIndex}
-                )
-              "
-            >
+        <button
+          class="danger"
+          onclick="
+            deleteTopic(
+              ${subjectIndex},
+              ${topicIndex}
+            )
+          ">
+          ✕
+        </button>
 
-            <span>
-              ${escapeHTML(topic.name)}
-            </span>
+      `;
 
-            <button
-              class="delete"
 
-              onclick="
-                deleteTopic(
-                  ${subjectIndex},
-                  ${topicIndex}
-                )
-              ">
-              ✕
-            </button>
-
-          `;
-
-          topicContainer.appendChild(
-            topicDiv
-          );
-
-        }
+      topicContainer.appendChild(
+        topicDiv
       );
 
     }
@@ -589,82 +937,181 @@ function render() {
 }
 
 
-/* OVERALL PROGRESS */
+/* SUBJECT EXPAND */
 
-function updateOverallProgress() {
+function toggleSubject(index) {
 
-  let totalTopics = 0;
+  data[index].expanded =
+    !data[index].expanded;
 
-  let completedTopics = 0;
-
-
-  data.forEach(subject => {
-
-    totalTopics +=
-      subject.topics.length;
-
-    completedTopics +=
-      subject.topics.filter(
-        topic => topic.completed
-      ).length;
-
-  });
-
-
-  const percentage =
-    totalTopics === 0
-      ? 0
-      : Math.round(
-          (
-            completedTopics /
-            totalTopics
-          ) * 100
-        );
-
-
-  document.getElementById(
-    "overallPercentage"
-  ).textContent =
-    percentage + "%";
-
-
-  document.getElementById(
-    "overallProgressBar"
-  ).style.width =
-    percentage + "%";
-
-
-  document.getElementById(
-    "overallStats"
-  ).textContent =
-    completedTopics +
-    " of " +
-    totalTopics +
-    " topics completed";
+  save();
+  render();
 
 }
 
 
-/* SUBJECT PROGRESS TOGGLE */
+/* SUBJECT PROGRESS */
 
-function toggleSubjectProgress() {
+function toggleSubjectProgress(index) {
 
-  showSubjectProgress =
-    !showSubjectProgress;
+  data[index].showProgress =
+    !data[index].showProgress;
+
+  save();
+  render();
+
+}
 
 
-  const button =
-    document.getElementById(
-      "toggleProgressButton"
+/* CATEGORY */
+
+function addCategory() {
+
+  const name =
+    prompt("Category name:");
+
+  if (!name || !name.trim())
+    return;
+
+  const clean =
+    name.trim();
+
+  if (
+    clean === "Uncategorized" ||
+    categories.includes(clean)
+  ) {
+
+    alert(
+      "That category already exists."
+    );
+
+    return;
+
+  }
+
+  categories.push(clean);
+
+  save();
+  render();
+
+}
+
+
+function toggleCategory(category) {
+
+  categoryStates[category] =
+    !categoryStates[category];
+
+  save();
+  render();
+
+}
+
+
+function deleteCategory(category) {
+
+  if (
+    !confirm(
+      "Delete this category? Subjects inside it will be moved to Uncategorized."
+    )
+  ) return;
+
+
+  data.forEach(subject => {
+
+    if (subject.category === category)
+      subject.category =
+        "Uncategorized";
+
+  });
+
+
+  categories =
+    categories.filter(
+      item => item !== category
     );
 
 
-  button.textContent =
-    showSubjectProgress
-      ? "Hide Subject Progress"
-      : "Show Subject Progress";
+  delete categoryStates[category];
 
 
+  save();
+  render();
+
+}
+
+
+/* CHANGE CATEGORY */
+
+function changeCategory(
+  subjectIndex,
+  category
+) {
+
+  data[subjectIndex].category =
+    category;
+
+  save();
+  render();
+
+}
+
+
+/* MOVE SUBJECT */
+
+function moveSubject(
+  index,
+  direction
+) {
+
+  const category =
+    data[index].category ||
+    "Uncategorized";
+
+
+  const indexes =
+    data
+      .map((subject, i) => ({
+        subject,
+        index: i
+      }))
+      .filter(item =>
+        (item.subject.category ||
+          "Uncategorized")
+        === category
+      )
+      .map(item => item.index);
+
+
+  const position =
+    indexes.indexOf(index);
+
+
+  const targetPosition =
+    position + direction;
+
+
+  if (
+    targetPosition < 0 ||
+    targetPosition >= indexes.length
+  ) return;
+
+
+  const targetIndex =
+    indexes[targetPosition];
+
+
+  const temp =
+    data[index];
+
+  data[index] =
+    data[targetIndex];
+
+  data[targetIndex] =
+    temp;
+
+
+  save();
   render();
 
 }
@@ -675,28 +1122,31 @@ function toggleSubjectProgress() {
 function addSubject() {
 
   const name =
-    prompt(
-      "Enter subject name:"
-    );
+    prompt("Subject name:");
 
-
-  if (
-    !name ||
-    !name.trim()
-  ) return;
+  if (!name || !name.trim())
+    return;
 
 
   data.push({
 
     name: name.trim(),
 
-    topics: []
+    topics: [],
+
+    category:
+      "Uncategorized",
+
+    expanded:
+      false,
+
+    showProgress:
+      false
 
   });
 
 
-  saveData();
-
+  save();
   render();
 
 }
@@ -704,25 +1154,20 @@ function addSubject() {
 
 /* TOPIC MODAL */
 
-function openTopicModal(
-  subjectIndex
-) {
+function openTopicModal(index) {
 
   currentSubjectIndex =
-    subjectIndex;
-
+    index;
 
   document.getElementById(
     "topicInput"
   ).value = "";
-
 
   document.getElementById(
     "topicModal"
   ).classList.add(
     "visible"
   );
-
 
   document.getElementById(
     "topicInput"
@@ -739,20 +1184,16 @@ function closeTopicModal() {
     "visible"
   );
 
-
   currentSubjectIndex =
     null;
 
 }
 
 
-/* ADD MULTIPLE TOPICS */
+function confirmTopics() {
 
-function confirmAddTopics() {
-
-  if (
-    currentSubjectIndex === null
-  ) return;
+  if (currentSubjectIndex === null)
+    return;
 
 
   const input =
@@ -764,54 +1205,39 @@ function confirmAddTopics() {
   const topics =
     input
       .split("\n")
-      .map(
-        topic =>
-          topic.trim()
+      .map(topic =>
+        topic.trim()
       )
-      .filter(
-        topic =>
-          topic.length > 0
-      );
+      .filter(Boolean);
 
 
-  if (
-    topics.length === 0
-  ) {
-
+  if (!topics.length)
     return;
 
-  }
+
+  topics.forEach(name => {
+
+    data[
+      currentSubjectIndex
+    ].topics.push({
+
+      name,
+
+      completed: false
+
+    });
+
+  });
 
 
-  topics.forEach(
-    topicName => {
-
-      data[
-        currentSubjectIndex
-      ].topics.push({
-
-        name:
-          topicName,
-
-        completed:
-          false
-
-      });
-
-    }
-  );
-
-
-  saveData();
-
+  save();
   closeTopicModal();
-
   render();
 
 }
 
 
-/* TOGGLE TOPIC */
+/* TOPIC */
 
 function toggleTopic(
   subjectIndex,
@@ -831,14 +1257,11 @@ function toggleTopic(
     ].completed;
 
 
-  saveData();
-
+  save();
   render();
 
 }
 
-
-/* DELETE TOPIC */
 
 function deleteTopic(
   subjectIndex,
@@ -860,8 +1283,7 @@ function deleteTopic(
   );
 
 
-  saveData();
-
+  save();
   render();
 
 }
@@ -869,9 +1291,7 @@ function deleteTopic(
 
 /* DELETE SUBJECT */
 
-function deleteSubject(
-  subjectIndex
-) {
+function deleteSubject(index) {
 
   if (
     !confirm(
@@ -880,40 +1300,48 @@ function deleteSubject(
   ) return;
 
 
-  data.splice(
-    subjectIndex,
-    1
-  );
+  data.splice(index, 1);
 
-
-  saveData();
-
+  save();
   render();
 
 }
 
 
-/* ESCAPE HTML */
+/* HELPERS */
 
 function escapeHTML(text) {
 
   const div =
-    document.createElement(
-      "div"
-    );
+    document.createElement("div");
 
-
-  div.textContent =
-    text;
-
+  div.textContent = text;
 
   return div.innerHTML;
 
 }
 
 
-/* INITIAL RENDER */
+function escapeJS(text) {
 
+  return text
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+
+}
+
+
+function safeId(text) {
+
+  return text
+    .replace(/[^a-zA-Z0-9]/g, "_");
+
+}
+
+
+/* INITIAL */
+
+save();
 render();
 
 </script>
