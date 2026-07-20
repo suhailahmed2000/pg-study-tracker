@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PG Study Tracker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 30px 20px 80px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #777;
+      margin-top: 0;
+      margin-bottom: 30px;
+    }
+
+    .subject {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .subject-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .subject-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .percentage {
+      font-weight: 600;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 10px;
+      background: #e5e5ea;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0 18px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #34c759;
+      transition: width 0.3s ease;
+    }
+
+    .topic {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .topic input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .topic.completed span {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .topic span {
+      flex: 1;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-topic {
+      background: #eee;
+      margin-top: 10px;
+    }
+
+    .delete {
+      background: none;
+      color: #aaa;
+      font-size: 16px;
+      padding: 4px 8px;
+    }
+
+    .delete:hover {
+      color: red;
+    }
+
+    .add-subject {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: #007aff;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .empty {
+      color: #999;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>PG Study Tracker</h1>
+  <p class="subtitle">One topic at a time.</p>
+
+  <div id="subjects"></div>
+
+  <button class="add-subject" onclick="addSubject()">
+    + Add Subject
+  </button>
+
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("pgStudyTracker")) || [];
+
+function saveData() {
+  localStorage.setItem("pgStudyTracker", JSON.stringify(data));
+}
+
+function render() {
+
+  const container = document.getElementById("subjects");
+  container.innerHTML = "";
+
+  data.forEach((subject, subjectIndex) => {
+
+    const completed = subject.topics.filter(t => t.completed).length;
+    const total = subject.topics.length;
+
+    const percentage =
+      total === 0 ? 0 : Math.round((completed / total) * 100);
+
+    const subjectDiv = document.createElement("div");
+    subjectDiv.className = "subject";
+
+    subjectDiv.innerHTML = `
+      <div class="subject-header">
+
+        <div class="subject-title">
+          ${escapeHTML(subject.name)}
+        </div>
+
+        <div>
+          <span class="percentage">${percentage}%</span>
+
+          <button
+            class="delete"
+            onclick="deleteSubject(${subjectIndex})">
+            ✕
+          </button>
+        </div>
+
+      </div>
+
+      <div class="progress-container">
+        <div
+          class="progress-bar"
+          style="width:${percentage}%">
+        </div>
+      </div>
+
+      <div id="topics-${subjectIndex}"></div>
+
+      <button
+        class="add-topic"
+        onclick="addTopic(${subjectIndex})">
+        + Add Topic
+      </button>
+    `;
+
+    container.appendChild(subjectDiv);
+
+    const topicContainer =
+      document.getElementById(`topics-${subjectIndex}`);
+
+    if (subject.topics.length === 0) {
+
+      topicContainer.innerHTML =
+        `<div class="empty">No topics yet</div>`;
+
+    }
+
+    subject.topics.forEach((topic, topicIndex) => {
+
+      const topicDiv = document.createElement("div");
+
+      topicDiv.className =
+        "topic" + (topic.completed ? " completed" : "");
+
+      topicDiv.innerHTML = `
+
+        <input
+          type="checkbox"
+          ${topic.completed ? "checked" : ""}
+          onchange="toggleTopic(${subjectIndex}, ${topicIndex})"
+        >
+
+        <span>
+          ${escapeHTML(topic.name)}
+        </span>
+
+        <button
+          class="delete"
+          onclick="deleteTopic(${subjectIndex}, ${topicIndex})">
+          ✕
+        </button>
+
+      `;
+
+      topicContainer.appendChild(topicDiv);
+
+    });
+
+  });
+
+}
+
+function addSubject() {
+
+  const name = prompt("Enter subject name:");
+
+  if (!name || !name.trim()) return;
+
+  data.push({
+    name: name.trim(),
+    topics: []
+  });
+
+  saveData();
+  render();
+
+}
+
+function addTopic(subjectIndex) {
+
+  const name = prompt("Enter topic name:");
+
+  if (!name || !name.trim()) return;
+
+  data[subjectIndex].topics.push({
+    name: name.trim(),
+    completed: false
+  });
+
+  saveData();
+  render();
+
+}
+
+function toggleTopic(subjectIndex, topicIndex) {
+
+  data[subjectIndex]
+    .topics[topicIndex]
+    .completed =
+    !data[subjectIndex]
+      .topics[topicIndex]
+      .completed;
+
+  saveData();
+  render();
+
+}
+
+function deleteTopic(subjectIndex, topicIndex) {
+
+  if (!confirm("Delete this topic?")) return;
+
+  data[subjectIndex]
+    .topics
+    .splice(topicIndex, 1);
+
+  saveData();
+  render();
+
+}
+
+function deleteSubject(subjectIndex) {
+
+  if (!confirm("Delete this subject and all its topics?"))
+    return;
+
+  data.splice(subjectIndex, 1);
+
+  saveData();
+  render();
+
+}
+
+function escapeHTML(text) {
+
+  const div = document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+
+}
+
+render();
+
+</script>
+
+</body>
+</html>
